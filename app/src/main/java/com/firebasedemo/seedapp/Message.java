@@ -1,19 +1,19 @@
 package com.firebasedemo.seedapp;
 
 public class Message {
-    private String name;
+    private String email;
     private String text;
 
     public Message() {
     }
 
-    public Message(String name, String text) {
-        this.name = name;
+    public Message(String email, String text) {
+        this.email = email;
         this.text = text;
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
     public String getText() {

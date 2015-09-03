@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,7 +20,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.ui.FirebaseListAdapter;
 
-public class MainActivity extends ActionBarActivity implements Firebase.AuthStateListener, Firebase.AuthResultHandler {
+public class MainActivity extends ActionBarActivity implements Firebase.AuthStateListener, Firebase.AuthResultHandler, TextView.OnEditorActionListener {
     private static String TAG = MainActivity.class.getSimpleName();
 
     private Firebase mFirebaseRef;
@@ -36,6 +38,7 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         mFirebaseRef = new Firebase("https://<your-firebase-app>.firebaseio.com/messages");
 
         mTextEdit = (EditText) findViewById(R.id.text_edit);
+        mTextEdit.setOnEditorActionListener(this);
 
         // When the user clicks the Send button, we call onSendButtonClick()
         mSendButton = (Button) findViewById(R.id.send_button);
@@ -53,7 +56,7 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         mFirebaseAdapter = new FirebaseListAdapter<Message>(this, Message.class, android.R.layout.two_line_list_item, mFirebaseRef) {
             @Override
             protected void populateView(View view, Message message) {
-                ((TextView)view.findViewById(android.R.id.text1)).setText(message.getName());
+                ((TextView)view.findViewById(android.R.id.text1)).setText(message.getEmail());
                 ((TextView)view.findViewById(android.R.id.text2)).setText(message.getText());
             }
         };
@@ -96,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         if (id == R.id.action_auth) {
             // Build a dialog where the user enters their email and password
             new AlertDialog.Builder(MainActivity.this)
-                    .setMessage(R.string.login_message)
+                    //.setMessage(R.string.login_message)
                     .setTitle(R.string.login_label)
                     .setView(MainActivity.this.getLayoutInflater().inflate(R.layout.dialog_signin, null))
                     .setNegativeButton(android.R.string.cancel, null)
@@ -136,8 +139,14 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         // Create a message object out of the username and the message the user entered
         Message message = new Message(mUsername, mTextEdit.getText().toString());
 
-        // Create a new message in the Firebase Database and with the values
-        mFirebaseRef.push().setValue(message);
+        // We will only send non-empty messages
+        if (message.getText().length() > 0) {
+            // Create a new message in the Firebase Database and with the values
+            mFirebaseRef.push().setValue(message);
+
+            // Clear the existing message, to make it obvious to the user that it was sent to Firebase
+            mTextEdit.setText("");
+        }
     }
 
 
@@ -149,7 +158,9 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         else {
             mUsername = null;
         }
-        Log.i(TAG, "onAuthStateChanged: mUserName="+mUsername);
+        // Enable the Send button if we have a user name
+        mSendButton.setEnabled(mUsername != null);
+        // Force the Options menu to be updated, since the Login/Logout options may need to be toggled
         invalidateOptionsMenu();
     }
 
@@ -171,5 +182,14 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
                 })
                 .create()
                 .show();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+        if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+            mSendButton.performClick();
+            return true;
+        }
+        return false;
     }
 }
