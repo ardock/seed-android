@@ -1,4 +1,4 @@
-android + Firebase Seed App
+Android + Firebase Seed App
 =========================
 
 This is a seed application to help you get started building apps with [Android](https://www.android.com/) and Firebase.
