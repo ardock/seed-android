@@ -50,11 +50,11 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         mFirebaseRef.addAuthStateListener(this);
 
         // Create an object that adapts the messages from the Firebase Database into Views for the ListView
-        mFirebaseAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.two_line_list_item_custom, mFirebaseRef) {
+        mFirebaseAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.message_item, mFirebaseRef) {
             @Override
             protected void populateView(View view, Message message) {
-                ((TextView)view.findViewById(R.id.text1)).setText(message.getName());
-                ((TextView)view.findViewById(R.id.text2)).setText(message.getText());
+                ((TextView)view.findViewById(R.id.nameField)).setText(message.getName());
+                ((TextView)view.findViewById(R.id.messageField)).setText(message.getText());
             }
         };
         ((ListView)findViewById(R.id.messages_list)).setAdapter(mFirebaseAdapter);
