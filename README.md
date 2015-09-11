@@ -83,7 +83,7 @@ For more information on saving data to Firebase, check out our [saving data docs
 #### Displaying messages
 This app makes use of [FirebaseUI](https://github.com/firebase/FirebaseUI-Android) to bind a Firebase database reference to a `ListView`.
 
-It overrides the `populateView()` method of the `FirebaseListAdapter` to populate the sub-views of an `android.R.layout.two_line_list_item`.
+It overrides the `populateView()` method of the `FirebaseListAdapter` to populate the sub-views of an `R.layout.message_item`.
 
 More information is available in the [Firebase docs](https://www.firebase.com/docs/android/guide/retrieving-data.html) and in the regular Firebase [retrieving data docs](https://www.firebase.com/docs/ios/guide/retrieving-data.html).
 
