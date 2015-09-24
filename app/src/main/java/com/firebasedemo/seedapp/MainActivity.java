@@ -2,9 +2,8 @@ package com.firebasedemo.seedapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements Firebase.AuthStat
         mFirebaseAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.message_item, mFirebaseRef) {
             @Override
             protected void populateView(View view, Message message) {
-                ((TextView)view.findViewById(R.id.nameField)).setText(message.getName());
+                ((TextView)view.findViewById(R.id.nameField)).setText(message.getEmail());
                 ((TextView)view.findViewById(R.id.messageField)).setText(message.getText());
             }
         };
